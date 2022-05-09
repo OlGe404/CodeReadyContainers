@@ -1,0 +1,9 @@
+---
+- name: Download and install code ready containers
+  hosts: localhost
+  vars_prompt:
+    - name: sudo_password
+      prompt: "Provide your sudo password to start the play"
+  roles:
+    - role: download_install_crc
+      tags: ["download", "install", "crc"]

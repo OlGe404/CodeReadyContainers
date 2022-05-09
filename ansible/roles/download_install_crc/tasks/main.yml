@@ -1,0 +1,78 @@
+---
+- name: Install required software packages
+  become: true
+  ansible.builtin.apt:
+    name: "{{ item }}"
+    update_cache: yes
+    cache_valid_time: 86400
+  loop:
+    - qemu-kvm
+    - libvirt-daemon
+    - libvirt-daemon-system
+    - network-manager
+
+- name: Download and unarchive crc
+  become: true
+  ansible.builtin.unarchive:
+    src: https://developers.redhat.com/content-gateway/rest/mirror/pub/openshift-v4/clients/crc/latest/crc-linux-amd64.tar.xz
+    dest: /usr/local/bin
+    mode: 0755
+    owner: "{{ lookup('env', 'USER') }}"
+    group: root
+    remote_src: true
+    list_files: true
+  register: crc_download
+
+- name: Set crc_download dest
+  ansible.builtin.set_fact: 
+    crc_dir: "{{ crc_download.files[0] | split('/') | first }}"
+
+- name: Make crc binary executable
+  become: true
+  ansible.builtin.copy:
+    src: "/usr/local/bin/{{ crc_dir }}/crc"
+    dest: /usr/local/bin
+    mode: 0755
+    owner: "{{ lookup('env', 'USER') }}"
+    group: root
+    remote_src: true
+
+- name: Prepare and run crc
+  block:
+    - name: Disable telemetry data 
+      changed_when: false
+      ansible.builtin.command: crc config set consent-telemetry no
+
+    - name: Add current user to 'libvirt' group
+      become: true
+      ansible.builtin.user:
+        name: "{{ lookup('env', 'USER') }}"
+        groups: ["libvirt"]
+        append: true
+
+    - name: Enable cluster monitoring
+      ansible.builtin.include_tasks:
+        file: cluster_monitoring.yaml
+      when: enable_cluster_monitoring|bool
+
+    - name: >
+        Refresh user groups and run crc setup
+        (downloads ~3GB, so this can take a while)
+      ansible.builtin.shell: sg libvirt -c "crc setup"
+
+    - name: >
+        Refresh user groups and start crc 
+        (pulls and starts all containers, so this can take a while too)
+      ansible.builtin.command: >
+        sg libvirt -c "crc start --pull-secret-file {{ pull_secret_path }}"
+
+    - name: Copy 'oc' to /usr/local/bin
+      become: true
+      ansible.builtin.copy:
+        src: "{{ lookup('env', 'HOME') }}/.crc/bin/oc/oc"
+        dest: /usr/local/bin
+        mode: 0755
+        owner: "{{ lookup('env', 'USER') }}"
+        group: root
+        remote_src: true
+        force: yes

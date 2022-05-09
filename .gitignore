@@ -9,6 +9,8 @@
 *.user
 *.userosscache
 *.sln.docstates
+**/.venv/**
+ansible/pullsecret.json
 
 # User-specific files (MonoDevelop/Xamarin Studio)
 *.userprefs
