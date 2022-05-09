@@ -17,7 +17,7 @@ check if your system meets the [system and hardware requirements](https://access
 
 # Usage
 relogin after playbook run to enable groups
-enable_cluster_monitoring (RAM requirements)
+enable_cluster_monitoring (RAM + cpu requirements)
 
 # Update
 

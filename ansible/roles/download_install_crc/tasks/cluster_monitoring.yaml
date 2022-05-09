@@ -1,4 +1,7 @@
 ---
+- name: Configure cpu usage
+  ansible.builtin.shell: sg libvirt -c "crc config set cpus 6"
+
 - name: Configure memory usage
   ansible.builtin.shell: sg libvirt -c "crc config set memory 14336"
 
