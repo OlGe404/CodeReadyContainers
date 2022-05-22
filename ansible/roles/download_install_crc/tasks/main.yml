@@ -76,3 +76,10 @@
         group: root
         remote_src: true
         force: yes
+
+- name: Print login info
+  debug: 
+    msg: >
+      You can now login to the openshift webconsole 
+      at https://console-openshift-console.apps-crc.testing.
+      Run 'crc console --credentials' to obtain your credentials.
