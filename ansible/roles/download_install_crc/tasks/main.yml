@@ -1,5 +1,5 @@
 ---
-- name: Install required software packages
+- name: Install required software packages for Debian/Ubuntu
   become: true
   ansible.builtin.apt:
     name: "{{ item }}"
@@ -14,23 +14,17 @@
 - name: Download and unarchive crc
   become: true
   ansible.builtin.unarchive:
-    src: https://developers.redhat.com/content-gateway/rest/mirror/pub/openshift-v4/clients/crc/latest/crc-linux-amd64.tar.xz
+    src: "https://developers.redhat.com/content-gateway/file/pub/openshift-v4/clients/crc/{{ download_install_crc_version }}/crc-linux-amd64.tar.xz"
     dest: /usr/local/bin
     mode: 0755
     owner: "{{ lookup('env', 'USER') }}"
     group: root
     remote_src: true
-    list_files: true
-  register: crc_download
-
-- name: Set crc_download dest
-  ansible.builtin.set_fact: 
-    crc_dir: "{{ crc_download.files[0] | split('/') | first }}"
 
 - name: Make crc binary executable
   become: true
   ansible.builtin.copy:
-    src: "/usr/local/bin/{{ crc_dir }}/crc"
+    src: "/usr/local/bin/crc-linux-{{ download_install_crc_version }}-amd64/crc"
     dest: /usr/local/bin
     mode: 0755
     owner: "{{ lookup('env', 'USER') }}"
@@ -50,21 +44,21 @@
         groups: ["libvirt"]
         append: true
 
-    - name: Enable cluster monitoring
+    - name: Configure cluster monitoring
       ansible.builtin.include_tasks:
         file: cluster_monitoring.yaml
-      when: enable_cluster_monitoring|bool
+      when: download_intall_crc_enable_cluster_monitoring|bool
 
-    - name: >
+    - name: >-
         Refresh user groups and run crc setup
         (downloads ~3GB, so this can take a while)
       ansible.builtin.shell: sg libvirt -c "crc setup"
 
-    - name: >
-        Refresh user groups and start crc 
+    - name: >-
+        Refresh user groups and start crc
         (pulls and starts all containers, so this can take a while too)
       ansible.builtin.command: >
-        sg libvirt -c "crc start --pull-secret-file {{ pull_secret_path }}"
+        sg libvirt -c "crc start --pull-secret-file {{ download_install_crc_pull_secret_path }}"
 
     - name: Copy 'oc' to /usr/local/bin
       become: true
@@ -77,9 +71,9 @@
         remote_src: true
         force: yes
 
-- name: Print login info
+- name: Print login info for the openshift webconsole
   debug: 
-    msg: >
+    msg: >-
       You can now login to the openshift webconsole 
       at https://console-openshift-console.apps-crc.testing.
       Run 'crc console --credentials' to obtain your credentials.
