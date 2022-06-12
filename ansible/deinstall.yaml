@@ -1,6 +1,6 @@
 ---
-- name: >
-    Remove and deinstall code ready containers and the required packages,
+- name: >-
+    Remove crc cluster and deinstall and the required packages,
     caches and components
   hosts: localhost
   vars_prompt:
@@ -8,9 +8,12 @@
       prompt: "Provide your sudo password to start the play"
 
   tasks:
+    - name: Remove user from kubeconfig
+      ansible.builtin.shell: oc logout | true
+
     - name: Remove oc binary
       become: true
-      file:
+      ansible.builtin.file:
         state: absent
         path: /usr/local/bin/oc
 
@@ -29,7 +32,7 @@
       when: crc_dir.files|length > 0
 
     - name: Remove crc instance
-      command: sg libvirt -c "{{ item }}"
+      ansible.builtin.command: sg libvirt -c "{{ item }}"
       loop:
         - crc stop
         - crc delete --clear-cache
@@ -37,7 +40,7 @@
 
     - name: Remove crc binary
       become: true
-      file:
+      ansible.builtin.file:
         state: absent
         path: /usr/local/bin/crc
 
