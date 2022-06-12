@@ -1,4 +1,5 @@
 ---
-download_install_crc_version: 2.3.0
-download_install_crc_pull_secret_path: "{{ playbook_dir }}/pullsecret.json"
-download_intall_crc_enable_cluster_monitoring: false
+crc_version: 2.4.1
+pull_secret_path: "{{ playbook_dir }}/pullsecret.json"
+enable_cluster_monitoring: false
+verify_installation: true

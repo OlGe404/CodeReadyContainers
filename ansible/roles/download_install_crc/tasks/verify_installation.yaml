@@ -1,0 +1,13 @@
+---
+- name: Run oc login
+  ansible.builtin.command: >
+    oc login -u developer -p developer 
+    https://api.crc.testing:6443
+    --insecure-skip-tls-verify
+
+- name: Run, check, delete hazelcast pod as example
+  ansible.builtin.shell: |
+    oc new-project developer | true && \
+    oc run hazelcast --image=hazelcast/hazelcast && \
+    oc wait --for=condition=Ready --timeout 15m pod/hazelcast && \
+    oc delete pod/hazelcast
