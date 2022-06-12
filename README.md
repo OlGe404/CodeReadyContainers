@@ -3,23 +3,23 @@ This repo can be used to setup a local code ready containers installation (opens
 
 # Requirements
 To be able to setup code ready containers with this repo, you need to:
-    * [setup a free redhat account](https://www.google.com/url?sa=t&rct=j&q=&esrc=s&source=web&cd=&cad=rja&uact=8&ved=2ahUKEwjGw8bPx9L3AhUNCewKHT11D7EQFnoECAYQAQ&url=https%3A%2F%2Fwww.redhat.com%2Fwapps%2Fugc%2Fregister.html&usg=AOvVaw0XN5agOwobjJWWJmiitUP7) to access the documentation and create a mandatory pullsecret file
-    * have 4 CPU cores (6 when cluster monitoring is enabled)
-    * 9GB of RAM (15GB when cluster monitoring is enabled)
-    * 35GB of free storage space
-    * One of the following operating systems:
-        - Ubuntu 18.04 LTS or later
-        - Debian 10 or later
+* [setup a free redhat account](https://www.google.com/url?sa=t&rct=j&q=&esrc=s&source=web&cd=&cad=rja&uact=8&ved=2ahUKEwjGw8bPx9L3AhUNCewKHT11D7EQFnoECAYQAQ&url=https%3A%2F%2Fwww.redhat.com%2Fwapps%2Fugc%2Fregister.html&usg=AOvVaw0XN5agOwobjJWWJmiitUP7) to access the documentation and create a mandatory pullsecret file
+* have 4 CPU cores (6 when cluster monitoring is enabled)
+* 9GB of RAM (15GB when cluster monitoring is enabled)
+* 35GB of free storage space
+* One of the following operating systems:
+    - Ubuntu 18.04 LTS or later
+    - Debian 10 or later
 # Usage
 When you have created a redhat account, download the pullsecret file and place it in 'ansible/pullsecret.json'.
 
 Afterwards:
-    * Navigate to the ansible dir with <code>cd ansible</code>
-    * Run the setup script for the virtual python environment with <code>./venv-setup.sh</code>
-    * Activate the virtual python environment with <code>source .venv/bin/activate</code>
-    * Run the playbook to start the crc installtion with <code>ansible-playbook playbook.yaml</code>
-    * When the installation is done, refresh your shell with <code>su $(whoami)</code>, so group changes can take effect
-    * Get your credentials via <code>crc console --credentials</code> and login to the openshift webconsole at 'https://console-openshift-console.apps-crc.testing'.
+  * Navigate to the ansible dir with <code>cd ansible</code>
+  * Run the setup script for the virtual python environment with <code>./venv-setup.sh</code>
+  * Activate the virtual python environment with <code>source .venv/bin/activate</code>
+  * Run the playbook to start the crc installtion with <code>ansible-playbook playbook.yaml</code>
+  * When the installation is done, refresh your shell with <code>su $(whoami)</code>, so group changes can take effect
+  * Get your credentials via <code>crc console --credentials</code> and login to the openshift webconsole at 'https://console-openshift-console.apps-crc.testing'.
 
 # Update
 The playbook installs the release version of crc specified in the [default vars file](ansible/roles/download_install_crc/defaults/main.yml). If you want to update an existing crc instalaltion to a new release, follow these steps in order:
