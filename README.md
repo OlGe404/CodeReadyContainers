@@ -17,7 +17,7 @@ Afterwards:
   * Navigate to the ansible dir with <code>cd ansible</code>
   * Run the setup script for the virtual environment with <code>./venv-setup.sh</code>
   * Activate the virtual environment with <code>source .venv/bin/activate</code>
-  * Run the playbook to start the crc installation with <code>ansible-playbook playbook.yaml</code>
+  * Run the playbook to start the crc installation with <code>ansible-playbook playbook.yaml</code> and provide your sudo password
   * When the installation is done, refresh your shell with <code>su $(whoami)</code>
   * Get your credentials via <code>crc console --credentials</code> and login to the openshift webconsole at https://console-openshift-console.apps-crc.testing
 
