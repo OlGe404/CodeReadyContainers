@@ -11,7 +11,7 @@ To install CRC with this repo, you need to:
     - Ubuntu 18.04 LTS or later
     - Debian 10 or later
 
-Note that the cluster monitoring is disabled by default, because it increases the cpu and memory requirements so much. To enable it, set <code>enable_cluster_monitoring: true</code> in the [default vars file](ansible/roles/download_install_crc/defaults/main.yml).
+Note that the cluster monitoring is disabled by default, because it increases the cpu and memory requirements so much. To enable it, set <code>enable_cluster_monitoring: true</code> in the [default vars file](ansible/roles/download_install_crc/defaults/main.yml). This can be done prior to the first installation, or to enable it in already existing installations later on.
 
 ## Install
 When you've created a redhat account, download the pullsecret file and move it to "ansible/pullsecret.json".
