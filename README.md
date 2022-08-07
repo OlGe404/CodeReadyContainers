@@ -21,6 +21,11 @@ Then:
   * After the installation has finished, refresh your shell with <code>su $(whoami)</code>
   * Login to the openshift webconsole at https://console-openshift-console.apps-crc.testing with <code>developer/developer</code> or <code>kubeadmin/kubeadmin</code>
 
+### Known Issues
+If the installation fails, it can get stuck and prevent new installations to run succesfully.
+
+See https://github.com/code-ready/crc/issues/1027 on how to resolve this.
+
 ## Deinstall
 To deinstall CRC, run
 * <code>cd ansible && ./venv-setup.sh && source .venv/bin/activate</code>
@@ -39,11 +44,6 @@ If you want to update an existing CRC installation to a new release, follow the 
 4. Install the new CRC release as described in "Install" above
 
 **WARNING:** By the time of writing, there is no way to update an existing CRC installation in place, so we have to deinstall/install the current CRC installation. This results in deleting the openshift cluster including *all data and deployments in it*.
-
-### Known Issues
-If the installation fails, it can get stuck and prevent new installations to run succesfully.
-
-See https://github.com/code-ready/crc/issues/1027 on how to resolve this.
 
 ## Cheatsheet
 | Command      | Description                                        |
