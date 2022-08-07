@@ -27,11 +27,14 @@ To deinstall CRC, run
 This will cleanup all installed packages, files, caches etc. that were created during the installation.
 
 ## Update
-If you want to update an existing CRC installation to a new release, follow these steps in order:
+If you want to update an existing CRC installation to a new release, follow the listed steps in order. 
+
+**Note**: Only versions > "2.4.0" are tested and "latest" is not a valid version specifier, because the playbook needs the version number to find files during the installation. Only specify versions like "2.4.1" or "2.6.0".
 
 1. Deinstall the current CRC installation as described in "Deinstall" above
-2. Configure the version to install in the [default vars file](ansible/roles/download_install_crc/defaults/main.yml)
-3. Install the new CRC release as described in "Install" above
+2. Find the release you want to install at https://developers.redhat.com/content-gateway/rest/mirror/pub/openshift-v4/clients/crc/
+3. Configure the version to install in the [default vars file](ansible/roles/download_install_crc/defaults/main.yml)
+4. Install the new CRC release as described in "Install" above
 
 **WARNING:** By the time of writing, there is no way to update an existing CRC installation in place, so we have to deinstall/install the current CRC installation. This results in deleting the openshift cluster including *all data and deployments in it*.
 
