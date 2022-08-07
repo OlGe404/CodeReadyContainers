@@ -7,7 +7,7 @@
     cache_valid_time: 86400
   loop: ["qemu-kvm", "libvirt-daemon", "libvirt-daemon-system", "network-manager"]
 
-- name: Download and unarchive crc
+- name: Download and unarchive CRC
   become: true
   ansible.builtin.unarchive:
     src: "https://developers.redhat.com/content-gateway/file/pub/openshift-v4/clients/crc/{{ crc_version }}/crc-linux-amd64.tar.xz"
@@ -17,7 +17,7 @@
     group: root
     remote_src: true
 
-- name: Make crc binary executable
+- name: Make CRC binary executable
   become: true
   ansible.builtin.copy:
     src: "/usr/local/bin/crc-linux-{{ crc_version }}-amd64/crc"
@@ -27,7 +27,7 @@
     group: root
     remote_src: true
 
-- name: Install and start crc
+- name: Install CRC
   block:
     - name: Add current user to 'libvirt' group
       become: true
@@ -41,7 +41,7 @@
         file: cluster_monitoring.yaml
       when: enable_cluster_monitoring
 
-    - name: Setup and start crc (this can take up to 1h)
+    - name: Setup and start CRC (this can take up to 1h)
       changed_when: false
       ansible.builtin.command: sg libvirt -c "crc {{ item }}"
       loop:
@@ -61,7 +61,7 @@
         remote_src: true
         force: yes
 
-    - name: Verify crc installation
+    - name: Verify CRC installation
       ansible.builtin.include_tasks: verify_installation.yaml
 
 - debug: 
