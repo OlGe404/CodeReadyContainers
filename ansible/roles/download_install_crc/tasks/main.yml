@@ -65,6 +65,4 @@
       ansible.builtin.include_tasks: verify_installation.yaml
 
 - debug: 
-    msg: >-
-      You can now login at https://console-openshift-console.apps-crc.testing.
-      Run 'crc console --credentials' to obtain your login credentials.
+    msg: "You can now login at https://console-openshift-console.apps-crc.testing."
