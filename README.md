@@ -4,12 +4,14 @@ This repo can be used to setup a local code ready containers (CRC) installation 
 ## Requirements
 To install CRC with this repo, you need to:
 * [Setup a free redhat account](https://www.google.com/url?sa=t&rct=j&q=&esrc=s&source=web&cd=&cad=rja&uact=8&ved=2ahUKEwjGw8bPx9L3AhUNCewKHT11D7EQFnoECAYQAQ&url=https%3A%2F%2Fwww.redhat.com%2Fwapps%2Fugc%2Fregister.html&usg=AOvVaw0XN5agOwobjJWWJmiitUP7) to download a mandatory pullsecret file
-* Have 4 CPU cores (6 when cluster monitoring is enabled)
-* 9GB of RAM (15GB when cluster monitoring is enabled)
+* Have 4 cpu cores (6 when cluster monitoring is enabled)
+* 9GB of memory (15GB when cluster monitoring is enabled)
 * 35GB of free storage space
 * One of the following operating systems:
     - Ubuntu 18.04 LTS or later
     - Debian 10 or later
+
+**Note**: The cluster monitoring is disabled by default, because it increases the cpu and memory requirements so much. To enable it, set <code>enable_cluster_monitoring: true</code> in the [default vars file](ansible/roles/download_install_crc/defaults/main.yml).
 ## Install
 When you've created a redhat account, download the pullsecret file and move it to [ansible/pullsecret.json](ansible/pullsecret.json).
 
