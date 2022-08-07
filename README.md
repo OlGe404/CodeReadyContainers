@@ -2,7 +2,7 @@
 This repo can be used to setup a local code ready containers (CRC) installation (openshift 4 equivalent) on Ubuntu/Debian.
 
 ## Requirements
-To setup CRC with this repo, you need to:
+To install CRC with this repo, you need to:
 * [Setup a free redhat account](https://www.google.com/url?sa=t&rct=j&q=&esrc=s&source=web&cd=&cad=rja&uact=8&ved=2ahUKEwjGw8bPx9L3AhUNCewKHT11D7EQFnoECAYQAQ&url=https%3A%2F%2Fwww.redhat.com%2Fwapps%2Fugc%2Fregister.html&usg=AOvVaw0XN5agOwobjJWWJmiitUP7) to download a mandatory pullsecret file
 * Have 4 CPU cores (6 when cluster monitoring is enabled)
 * 9GB of RAM (15GB when cluster monitoring is enabled)
@@ -39,3 +39,11 @@ If you want to update an existing CRC installation to a new release, follow thes
 If the installation fails, it can get stuck and prevent new installations to run succesfully.
 
 See https://github.com/code-ready/crc/issues/1027 on how to resolve this.
+
+## Cheatsheet
+| Command      | Description                                        |
+|--------------|----------------------------------------------------|
+| crc status   | Display the status of the current CRC installation |
+| crc start    | Start a stopped CRC installation                   |
+| crc stop     | Stop a started CRC installation                    |
+| crc console  | Open the OpenShift webconsole in your browser      |
