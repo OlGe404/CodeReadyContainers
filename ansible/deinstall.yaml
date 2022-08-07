@@ -1,11 +1,14 @@
 ---
-- name: >-
-    Remove crc cluster and deinstall and the required packages,
-    caches and components
+- name: Remove CRC and the required packages, caches and components
   hosts: localhost
   vars_prompt:
     - name: sudo_password
       prompt: "Provide your sudo password to start the play"
+
+  pre_tasks:
+    - name: Include default vars from download_install_crc
+      ansible.builtin.include_vars:
+        file: "{{ playbook_dir }}/roles/download_install_crc/defaults/main.yml"
 
   tasks:
     - name: Remove user from kubeconfig
@@ -17,39 +20,28 @@
         state: absent
         path: /usr/local/bin/oc
 
-    - name: Find crc download dir
-      ansible.builtin.find:
-        paths: /usr/local/bin/
-        file_type: directory
-        patterns: "crc-linux-*-amd64"
-      register: crc_dir
-
-    - name: Remove crc download dir
-      become: true
-      ansible.builtin.file:
-        state: absent
-        path: "{{ crc_dir.files[0].path }}"
-      when: crc_dir.files|length > 0
-
-    - name: Remove crc instance
+    - name: Remove CRC instance
       ansible.builtin.command: sg libvirt -c "{{ item }}"
       loop:
         - crc stop
         - crc delete --clear-cache
         - crc cleanup
 
-    - name: Remove crc binary
+    - name: Remove CRC dir and binary
       become: true
       ansible.builtin.file:
         state: absent
-        path: /usr/local/bin/crc
+        path: "{{ item }}" 
+      loop:
+        - /usr/local/bin/crc-linux-{{ crc_version }}-amd64/crc
+        - /usr/local/bin/crc
 
     - name: Remove current user from group 'libvirt'
       become: true
       ansible.builtin.command: gpasswd --delete {{ lookup('env', 'USER') }} libvirt
 
-    # Not deinstalling "network-manager" here on purpose because this would WRECK
-    # your system
+    # Not deinstalling "network-manager" here on purpose because
+    # this would WRECK your system
     - name: Deinstall required software packages
       become: true
       ansible.builtin.apt:
