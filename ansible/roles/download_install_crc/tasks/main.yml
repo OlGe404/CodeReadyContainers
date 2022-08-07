@@ -63,7 +63,6 @@
 
     - name: Verify crc installation
       ansible.builtin.include_tasks: verify_installation.yaml
-      when: verify_installation
 
 - debug: 
     msg: >-
