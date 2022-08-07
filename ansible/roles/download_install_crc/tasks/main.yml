@@ -1,4 +1,11 @@
 ---
+- name: Immediatly fail if crc_version is not valid
+  ansible.builtin.fail: 
+    msg: >-
+      The specified crc_version is not valid.
+      Only versions like '2.4.1' or '2.6.0' are supported.
+  when: crc_version is not regex("([\d.]+)")
+
 - name: Install required software packages
   become: true
   ansible.builtin.apt:

@@ -19,19 +19,19 @@ Then:
   * <code>cd ansible && ./venv-setup.sh && source .venv/bin/activate</code>
   * Start the installation with <code>ansible-playbook playbook.yaml</code> and provide your sudo password when prompted
   * After the installation has finished, refresh your shell with <code>su $(whoami)</code>
-  * Login to the openshift webconsole at https://console-openshift-console.apps-crc.testing with developer/developer or kubeadmin/kubeadmin
+  * Login to the openshift webconsole at https://console-openshift-console.apps-crc.testing with <code>developer/developer</code> or <code>kubeadmin/kubeadmin</code>
 
 ## Deinstall
 To deinstall CRC, run
 * <code>cd ansible && ./venv-setup.sh && source .venv/bin/activate</code>
 * <code>ansible-playbook deinstall.yaml</code> and provide your sudo password when prompted
 
-This will cleanup all installed packages, files, caches etc. that were created during the installation.
+This will cleanup all packages, files, caches etc. that were created during the CRC installation. 
 
 ## Update
 If you want to update an existing CRC installation to a new release, follow the listed steps in order. 
 
-**Note**: Only versions > "2.4.0" are tested and "latest" is not a valid version specifier, because the playbook needs the version number to find files during the installation. Only specify versions like "2.4.1" or "2.6.0".
+**Note**: Only versions > "2.4.0" are tested and "latest" is not a valid version specifier. Only specific versions like "2.4.1" or "2.6.0" are valid for the installation.
 
 1. Deinstall the current CRC installation as described in "Deinstall" above
 2. Find the release you want to install at https://developers.redhat.com/content-gateway/rest/mirror/pub/openshift-v4/clients/crc/
