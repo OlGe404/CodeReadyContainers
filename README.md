@@ -11,7 +11,8 @@ To install CRC with this repo, you need to:
     - Ubuntu 18.04 LTS or later
     - Debian 10 or later
 
-**Note**: The cluster monitoring is disabled by default, because it increases the cpu and memory requirements so much. To enable it, set <code>enable_cluster_monitoring: true</code> in the [default vars file](ansible/roles/download_install_crc/defaults/main.yml).
+Note that the cluster monitoring is disabled by default, because it increases the cpu and memory requirements so much. To enable it, set <code>enable_cluster_monitoring: true</code> in the [default vars file](ansible/roles/download_install_crc/defaults/main.yml).
+
 ## Install
 When you've created a redhat account, download the pullsecret file and move it to "ansible/pullsecret.json".
 
@@ -34,9 +35,7 @@ To deinstall CRC, run
 This will cleanup all packages, files, caches etc. that were created during the CRC installation. 
 
 ## Update
-If you want to update an existing CRC installation to a new release, follow the listed steps in order. 
-
-**Note**: Only versions > "2.4.0" are tested and "latest" is not a valid version specifier. Only specific versions like "2.4.1" or "2.6.0" are valid for the installation.
+If you want to update an existing CRC installation to a new release, follow the listed steps in order. Keep in mind that only versions > "2.4.0" are tested and "latest" is not a valid version specifier. Only specific versions like "2.4.1" or "2.6.0" are valid for the installation.
 
 1. Deinstall the current CRC installation as described in "Deinstall" above
 2. Find the release you want to install at https://developers.redhat.com/content-gateway/rest/mirror/pub/openshift-v4/clients/crc/
