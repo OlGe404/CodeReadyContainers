@@ -13,7 +13,7 @@ To install CRC with this repo, you need to:
 
 **Note**: The cluster monitoring is disabled by default, because it increases the cpu and memory requirements so much. To enable it, set <code>enable_cluster_monitoring: true</code> in the [default vars file](ansible/roles/download_install_crc/defaults/main.yml).
 ## Install
-When you've created a redhat account, download the pullsecret file and move it to [ansible/pullsecret.json](ansible/pullsecret.json).
+When you've created a redhat account, download the pullsecret file and move it to "ansible/pullsecret.json".
 
 Then:
   * <code>cd ansible && ./venv-setup.sh && source .venv/bin/activate</code>
