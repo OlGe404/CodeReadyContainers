@@ -20,12 +20,12 @@ Then:
   * <code>cd ansible && ./venv-setup.sh && source .venv/bin/activate</code>
   * Start the installation with <code>ansible-playbook playbook.yaml</code> and provide your sudo password when prompted
   * After the installation has finished, refresh your shell with <code>su $(whoami)</code>
-  * Login to the openshift webconsole at https://console-openshift-console.apps-crc.testing with <code>developer/developer</code> or <code>kubeadmin/kubeadmin</code>
+  * Login to the openshift webconsole at https://console-openshift-console.apps-crc.testing with <code>developer/developer</code> or <code>kubeadmin/kubeadmin</code> credentials
 
 ### Known Issues
 If the installation fails, it can get stuck and prevent new installations to run succesfully.
 
-See https://github.com/code-ready/crc/issues/1027 on how to resolve this.
+See https://github.com/code-ready/crc/issues/1027 for more information and on how to resolve this.
 
 ## Deinstall
 To deinstall CRC, run
