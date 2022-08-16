@@ -1,5 +1,5 @@
 ---
-- name: Immediatly fail if crc_version is not valid
+- name: Fail if crc_version is not valid
   ansible.builtin.fail: 
     msg: >-
       The specified crc_version is not valid.
@@ -54,7 +54,7 @@
         - setup
         - config set consent-telemetry no
         - config set kubeadmin-password kubeadmin
-        - start --pull-secret-file {{ pull_secret_path }}
+        - start --pull-secret-file {{ playbook_dir }}/pullsecret.json
 
     - name: Copy bundled 'oc' binary to /usr/local/bin
       become: true
