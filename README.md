@@ -22,6 +22,7 @@ Then:
   * After the installation has finished, refresh your shell with <code>su $(whoami)</code>
   * Login to the openshift webconsole at https://console-openshift-console.apps-crc.testing with <code>developer/developer</code> or <code>kubeadmin/kubeadmin</code> credentials
 
+The CRC installation will not be started automatically after you have rebooted or shutdown your system. To start it again, run `crc start` and to stop it run `crc stop`. To check the current status run `crc status`.
 ### Known Issues
 If the installation fails, it can get stuck and prevent new installations to run succesfully.
 
