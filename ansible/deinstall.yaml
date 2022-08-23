@@ -2,7 +2,7 @@
 - name: Remove CRC and the required packages, caches and components
   hosts: localhost
   vars_prompt:
-    - name: sudo_password
+    - name: ansible_become_pass
       prompt: "Provide your sudo password to start the play"
 
   pre_tasks:
@@ -39,15 +39,3 @@
     - name: Remove current user from group 'libvirt'
       become: true
       ansible.builtin.command: gpasswd --delete {{ lookup('env', 'USER') }} libvirt
-
-    # Not deinstalling "network-manager" here on purpose because
-    # this would WRECK your system
-    - name: Deinstall required software packages
-      become: true
-      ansible.builtin.apt:
-        name: "{{ item }}"
-        state: absent
-      loop:
-        - qemu-kvm
-        - libvirt-daemon
-        - libvirt-daemon-system

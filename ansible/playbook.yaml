@@ -2,7 +2,7 @@
 - name: Download and install code ready containers
   hosts: localhost
   vars_prompt:
-    - name: sudo_password
+    - name: ansible_become_pass
       prompt: "Provide your sudo password to start the play"
   roles:
     - role: download_install_crc
