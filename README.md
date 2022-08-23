@@ -3,7 +3,8 @@ This repo can be used to setup a local code ready containers (CRC) installation 
 
 ## Requirements
 To install CRC with this repo, you need to:
-* [Setup a free redhat account](https://www.google.com/url?sa=t&rct=j&q=&esrc=s&source=web&cd=&cad=rja&uact=8&ved=2ahUKEwjGw8bPx9L3AhUNCewKHT11D7EQFnoECAYQAQ&url=https%3A%2F%2Fwww.redhat.com%2Fwapps%2Fugc%2Fregister.html&usg=AOvVaw0XN5agOwobjJWWJmiitUP7) to download a mandatory pullsecret file
+* [Setup a free redhat account](https://www.google.com/url?sa=t&rct=j&q=&esrc=s&source=web&cd=&cad=rja&uact=8&ved=2ahUKEwjGw8bPx9L3AhUNCewKHT11D7EQFnoECAYQAQ&url=https%3A%2F%2Fwww.redhat.com%2Fwapps%2Fugc%2Fregister.html&usg=AOvVaw0XN5agOwobjJWWJmiitUP7)
+* [Download the mandatory pullsecrets file](https://console.redhat.com/openshift/install/pull-secret) and save it in "ansible/pullsecret.json"
 * Have 4 cpu cores (6 when cluster monitoring is enabled)
 * 9GB of memory (15GB when cluster monitoring is enabled)
 * 35GB of free storage space
@@ -11,22 +12,20 @@ To install CRC with this repo, you need to:
     - Ubuntu 18.04 LTS or later
     - Debian 10 or later
 
-Note that the cluster monitoring is disabled by default, because it increases the cpu and memory requirements so much. To enable it, set <code>enable_cluster_monitoring: true</code> in the [default vars file](ansible/roles/download_install_crc/defaults/main.yml). This can be done prior to the first installation, or to enable it in already existing installations later on.
+Note that the cluster monitoring is disabled by default, because it increases the cpu and memory requirements so much. To enable it, set <code>enable_cluster_monitoring: true</code> in the [default vars file](ansible/roles/download_install_crc/defaults/main.yml). This can be done prior to the first installation, or to enable it in existing installations later on.
 
 ## Install
-When you've created a redhat account, download the pullsecret file and move it to "ansible/pullsecret.json".
+When you've created a redhat account, downloaded the pullsecret file and moved it to "ansible/pullsecret.json", run:
 
-Then:
   * <code>cd ansible && ./venv-setup.sh && source .venv/bin/activate</code>
   * Start the installation with <code>ansible-playbook playbook.yaml</code> and provide your sudo password when prompted
   * After the installation has finished, refresh your shell with <code>su $(whoami)</code>
   * Login to the openshift webconsole at https://console-openshift-console.apps-crc.testing with <code>developer/developer</code> or <code>kubeadmin/kubeadmin</code> credentials
 
-The CRC installation will not be started automatically after you have rebooted or shutdown your system. To start it again, run `crc start` and to stop it run `crc stop`. To check the current status run `crc status`.
-### Known Issues
-If the installation fails, it can get stuck and prevent new installations to run succesfully.
+The CRC installation will not be started automatically after you have rebooted or shutdown your system. See the "Cheatsheet" section below for common commands.
 
-See https://github.com/code-ready/crc/issues/1027 for more information and on how to resolve this.
+### Known Issues
+If the installation fails, it can get stuck and prevent new installations to run succesfully. If you have trouble running the playbook consecutively after an installation failed, see https://github.com/code-ready/crc/issues/1027 for more information on how to resolve this.
 
 ## Deinstall
 To deinstall CRC, run

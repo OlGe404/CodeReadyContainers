@@ -1,9 +1,20 @@
 ---
+- name: Check presence of pullsecret.json file
+  ansible.builtin.stat: path="{{ playbook_dir }}/pullsecret.json"
+  register: pullsecret_json
+
+- name: Fail if pullsecret.json file doesn't exist
+  ansible.builtin.fail:
+    msg: >-
+      The mandatory 'ansible/pullsecret.json' file doesn't exist.
+      Checkout the README on how to create it.
+  when: not pullsecret_json.stat.exists
+
 - name: Fail if crc_version is not valid
   ansible.builtin.fail: 
     msg: >-
       The specified crc_version is not valid.
-      Only versions like '2.4.1' or '2.6.0' are supported.
+      Checkout the 'update' section in README on which versions are supported.
   when: crc_version is not regex("([\d.]+)")
 
 - name: Install required software packages
