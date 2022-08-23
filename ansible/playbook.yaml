@@ -6,4 +6,4 @@
       prompt: "Provide your sudo password to start the play"
   roles:
     - role: download_install_crc
-      tags: ["download", "install", "crc"]
+      tags: ["download_install_crc", "crc"]
