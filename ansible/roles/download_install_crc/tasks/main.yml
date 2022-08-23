@@ -23,7 +23,11 @@
     name: "{{ item }}"
     update_cache: yes
     cache_valid_time: 86400
-  loop: ["qemu-kvm", "libvirt-daemon", "libvirt-daemon-system", "network-manager"]
+  loop: 
+    - qemu-kvm
+    - libvirt-daemon
+    - libvirt-daemon-system
+    - network-manager
 
 - name: Download and unarchive CRC
   become: true
@@ -72,9 +76,9 @@
       ansible.builtin.copy:
         src: "{{ lookup('env', 'HOME') }}/.crc/bin/oc/oc"
         dest: /usr/local/bin
-        mode: 0755
         owner: "{{ lookup('env', 'USER') }}"
         group: root
+        mode: 0755
         remote_src: true
         force: yes
 
