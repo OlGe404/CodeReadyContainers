@@ -1,7 +1,0 @@
----
-- name: Configure and enable cluster-monitoring deployment
-  ansible.builtin.shell: sg libvirt -c "crc config set {{ item }}"
-  loop:
-    - cpus 6
-    - memory 14336
-    - enable-cluster-monitoring true

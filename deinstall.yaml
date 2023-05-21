@@ -2,13 +2,10 @@
 - name: Remove CRC and the required packages, caches and components
   hosts: localhost
   vars_prompt:
-    - name: ansible_become_pass
-      prompt: "Provide your sudo password to start the play"
+    - name: sudo_pass
+      prompt: "Provide your sudo password to start the deinstallation "
 
-  pre_tasks:
-    - name: Include default vars from download_install_crc
-      ansible.builtin.include_vars:
-        file: "{{ playbook_dir }}/roles/download_install_crc/defaults/main.yml"
+  vars_files: vars.yaml
 
   tasks:
     - name: Remove user from kubeconfig
@@ -31,7 +28,7 @@
       become: true
       ansible.builtin.file:
         state: absent
-        path: "{{ item }}" 
+        path: "{{ item }}"
       loop:
         - /usr/local/bin/crc-linux-{{ crc_version }}-amd64/crc
         - /usr/local/bin/crc

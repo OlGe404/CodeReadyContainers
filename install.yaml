@@ -1,0 +1,130 @@
+---
+- name: Install CRC
+  hosts: localhost
+  gather_facts: false
+  vars_prompt:
+    - name: sudo_pass
+      prompt: "Provide your sudo password to start the installation"
+
+  vars_files: vars.yaml
+
+  pre_tasks:
+    - name: Check if pullsecret.json file exists
+      ansible.builtin.stat:
+        path: "{{ playbook_dir }}/pullsecret.json"
+      register: pullsecret_json
+
+    - name: Fail if it doesn't exist
+      ansible.builtin.fail:
+        msg: >-
+          The mandatory 'pullsecret.json' file doesn't exist.
+          Checkout the README.md on how to create it.
+      when: not pullsecret_json.stat.exists
+
+    - name: Fail if crc.version is not valid
+      ansible.builtin.fail:
+        msg: >-
+          The specified crc.version is not valid.
+          Checkout the 'update' section in README.md on which versions are supported.
+      when: crc.version is not regex("([\d.]+)")
+
+  tasks:
+    - name: Install required software packages
+      become: true
+      tags: prerequisites
+      ansible.builtin.apt:
+        name: "{{ item }}"
+        update_cache: true
+        cache_valid_time: 86400
+      loop:
+        - qemu-kvm
+        - libvirt-daemon
+        - libvirt-daemon-system
+        - network-manager
+
+    - name: Download and unarchive CRC
+      tags: download
+      become: true
+      ansible.builtin.unarchive:
+        src: "https://developers.redhat.com/content-gateway/file/pub/openshift-v4/clients/crc/{{ crc.version }}/crc-linux-amd64.tar.xz"
+        remote_src: true
+        dest: /usr/local/bin
+        mode: "0755"
+        owner: "{{ crc.user }}"
+        group: root
+      register: crc_download
+      until: crc_download is succeeded
+      retries: 5
+      delay: 3
+
+    - name: Make CRC binary executable
+      tags: download
+      become: true
+      ansible.builtin.copy:
+        src: "/usr/local/bin/crc-linux-{{ crc.version }}-amd64/crc"
+        dest: /usr/local/bin
+        mode: "0755"
+        owner: "{{ crc.user }}"
+        group: root
+        remote_src: true
+
+    - name: Add current user to 'libvirt' group
+      tags: download
+      become: true
+      ansible.builtin.user:
+        name: "{{ crc.user }}"
+        groups:
+          - libvirt
+        append: true
+
+    - name: Enable cluster monitoring
+      when: crc.cluster_monitoring
+      tags: setup
+      changed_when: false
+      ansible.builtin.command: sg libvirt -c "crc config set {{ item }}"
+      loop:
+        - cpus 6
+        - memory 14336
+        - enable-cluster-monitoring true
+
+    - name: Setup and start CRC (this can take up to 1h)
+      tags: setup
+      changed_when: false
+      ansible.builtin.command: sg libvirt -c "crc {{ item }}"
+      loop:
+        - setup
+        - config set consent-telemetry no
+        - config set kubeadmin-password kubeadmin
+        - start --pull-secret-file {{ playbook_dir }}/pullsecret.json
+
+    - name: Copy bundled 'oc' binary to /usr/local/bin
+      tags: setup
+      become: true
+      ansible.builtin.copy:
+        src: "{{ lookup('env', 'HOME') }}/.crc/bin/oc/oc"
+        dest: /usr/local/bin
+        owner: "{{ crc.user }}"
+        group: root
+        mode: "0755"
+        remote_src: true
+        force: true
+
+    - name: Run oc login
+      tags: test
+      changed_when: false
+      ansible.builtin.command: >
+        oc login -u developer -p developer https://api.crc.testing:6443 --insecure-skip-tls-verify
+
+    - name: Run, check, delete hazelcast pod as example
+      tags: test
+      changed_when: false
+      ansible.builtin.shell: |
+        set -o pipefail
+
+        oc new-project developer | true
+        oc run hazelcast --image=hazelcast/hazelcast
+        oc wait --for=condition=Ready --timeout 15m pod/hazelcast
+        oc delete pod/hazelcast
+
+    - debug:
+        msg: "You can now login at https://console-openshift-console.apps-crc.testing."
