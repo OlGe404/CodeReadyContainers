@@ -52,6 +52,7 @@
         mode: "0755"
         owner: "{{ crc.user }}"
         group: root
+        creates: "/usr/local/bin/crc-linux-{{ crc.version }}-amd64"
       register: crc_download
       until: crc_download is succeeded
       retries: 5
@@ -62,11 +63,11 @@
       become: true
       ansible.builtin.copy:
         src: "/usr/local/bin/crc-linux-{{ crc.version }}-amd64/crc"
+        remote_src: true
         dest: /usr/local/bin
         mode: "0755"
         owner: "{{ crc.user }}"
         group: root
-        remote_src: true
 
     - name: Add current user to 'libvirt' group
       tags: download
@@ -102,11 +103,11 @@
       become: true
       ansible.builtin.copy:
         src: "{{ lookup('env', 'HOME') }}/.crc/bin/oc/oc"
+        remote_src: true
         dest: /usr/local/bin
         owner: "{{ crc.user }}"
         group: root
         mode: "0755"
-        remote_src: true
         force: true
 
     - name: Run oc login
