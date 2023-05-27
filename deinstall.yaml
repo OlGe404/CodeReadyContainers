@@ -9,6 +9,7 @@
 
   tasks:
     - name: Remove user from kubeconfig
+      tags: skip_ansible_lint
       ansible.builtin.shell: oc logout | true
 
     - name: Remove oc binary
@@ -18,6 +19,7 @@
         path: /usr/local/bin/oc
 
     - name: Remove CRC instance
+      changed_when: false
       ansible.builtin.command: sg libvirt -c "{{ item }}"
       loop:
         - crc stop
@@ -30,9 +32,10 @@
         state: absent
         path: "{{ item }}"
       loop:
-        - /usr/local/bin/crc-linux-{{ crc_version }}-amd64/crc
+        - /usr/local/bin/crc-linux-{{ crc.version }}-amd64/crc
         - /usr/local/bin/crc
 
     - name: Remove current user from group 'libvirt'
       become: true
-      ansible.builtin.command: gpasswd --delete {{ lookup('env', 'USER') }} libvirt
+      changed_when: false
+      ansible.builtin.command: "gpasswd --delete {{ crc.user }} libvirt"

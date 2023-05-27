@@ -1,0 +1,6 @@
+---
+- name: Deinstall existing crc instance
+  ansible.builtin.import_playbook: deinstall.yaml
+
+- name: Install new crc instance
+  ansible.builtin.import_playbook: install.yaml
