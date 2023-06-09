@@ -33,7 +33,7 @@ To deinstall CRC, run `ansible-playbook deinstall.yaml` and provide your sudo pa
 
 ## Update
 If you want to update an existing CRC installation to a new release, set the new version in
-the [vars.yaml file(vars.yaml)] and `ansible-playbook update.yaml`. You can find the available
+the [vars.yaml file](vars.yaml) and run `ansible-playbook update.yaml`. You can find the available
 versions at https://developers.redhat.com/content-gateway/rest/mirror/pub/openshift-v4/clients/crc/.
 
 **WARNING:** By the time of writing, there is no way to update an existing CRC installation in place, so we have to deinstall/install the current CRC installation. This will delete openshift cluster including *all data and deployments in it*.

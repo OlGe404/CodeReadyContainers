@@ -9,23 +9,23 @@
   vars_files: vars.yaml
 
   pre_tasks:
-    - name: Check if pullsecret.json file exists
+    - name: Check for pullsecret.json
       ansible.builtin.stat:
         path: "{{ playbook_dir }}/pullsecret.json"
       register: pullsecret_json
 
-    - name: Fail if it doesn't exist
+    - name: Fail if pullsecret.json doesn't exist
       ansible.builtin.fail:
         msg: >-
           The mandatory 'pullsecret.json' file doesn't exist.
-          Checkout the README.md on how to create it.
+          Read the "Requirements" section in README.md on how to create it.
       when: not pullsecret_json.stat.exists
 
     - name: Fail if crc.version is not valid
       ansible.builtin.fail:
         msg: >-
           The specified crc.version is not valid.
-          Checkout the 'update' section in README.md on which versions are supported.
+          Checkout the "Update" section in README.md on which versions are supported.
       when: crc.version is not regex("([\d.]+)")
 
   tasks:
@@ -129,5 +129,8 @@
         oc wait --for=condition=Ready --timeout 15m pod/hazelcast
         oc delete pod/hazelcast
 
-    - debug:
-        msg: "You can now login at https://console-openshift-console.apps-crc.testing."
+    - name: Print CRC webconsole login information
+      ansible.builtin.debug:
+        msg: >-
+          You can now login at https://console-openshift-console.apps-crc.testing with
+          "developer/developer" or "kubeadmin/kubeadmin" credentials.
