@@ -5,5 +5,5 @@ ansible_become_method: sudo
 ansible_sudo_pass: "{{ sudo_pass }}"
 ansible_user: "{{ lookup('env', 'USER') }}"
 
-crc_version: 2.19.0
+crc_version: 2.26.0
 crc_cluster_monitoring: false

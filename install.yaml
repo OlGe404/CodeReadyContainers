@@ -32,15 +32,15 @@
     - name: Install required packages
       become: true
       tags: prerequisites
-      ansible.builtin.apt:
-        name: "{{ item }}"
-        update_cache: true
-        cache_valid_time: 86400
       loop:
         - qemu-kvm
         - libvirt-daemon
         - libvirt-daemon-system
         - network-manager
+      ansible.builtin.apt:
+        name: "{{ item }}"
+        update_cache: true
+        cache_valid_time: 86400
 
     - name: Download CRC {{ crc_version }}
       tags: download
@@ -48,11 +48,11 @@
       ansible.builtin.unarchive:
         src: "https://developers.redhat.com/content-gateway/file/pub/openshift-v4/clients/crc/{{ crc_version }}/crc-linux-amd64.tar.xz"
         remote_src: true
-        dest: /usr/local/bin
+        dest: /tmp
         mode: "0755"
         owner: "{{ ansible_user }}"
         group: root
-        creates: "/usr/local/bin/crc-linux-{{ crc_version }}-amd64"
+        creates: "/tmp/crc-linux-{{ crc_version }}-amd64"
       register: crc_download
       until: crc_download is succeeded
       retries: 5
@@ -62,9 +62,9 @@
       tags: download
       become: true
       ansible.builtin.copy:
-        src: "/usr/local/bin/crc-linux-{{ crc_version }}-amd64/crc"
+        src: "/tmp/crc-linux-{{ crc_version }}-amd64/crc"
         remote_src: true
-        dest: /usr/local/bin
+        dest: /usr/local/bin/crc
         mode: "0755"
         owner: "{{ ansible_user }}"
         group: root
@@ -81,20 +81,20 @@
     - name: Enable cluster monitoring
       when: crc_cluster_monitoring
       tags: setup
-      ansible.builtin.command: sg libvirt -c "crc config set {{ item }}"
       loop:
         - cpus 6
         - memory 14336
         - enable-cluster-monitoring true
+      ansible.builtin.command: sg libvirt -c "crc config set {{ item }}"
 
     - name: Setup and start CRC (this can take up to 1h)
       tags: setup
-      ansible.builtin.command: sg libvirt -c "crc {{ item }}"
       loop:
         - setup
         - config set consent-telemetry no
         - config set kubeadmin-password kubeadmin
         - start --pull-secret-file {{ playbook_dir }}/pullsecret.json
+      ansible.builtin.command: sg libvirt -c "crc {{ item }}"
 
     - name: Setup oc
       tags: setup
@@ -102,7 +102,7 @@
       ansible.builtin.copy:
         src: "{{ lookup('env', 'HOME') }}/.crc/bin/oc/oc"
         remote_src: true
-        dest: /usr/local/bin
+        dest: /usr/local/bin/oc
         owner: "{{ ansible_user }}"
         group: root
         mode: "0755"
@@ -113,17 +113,13 @@
       ansible.builtin.command: >
         oc login -u developer -p developer https://api.crc.testing:6443 --insecure-skip-tls-verify
 
-    - name: Run, check, delete hazelcast pod as example
+    - name: Run, check, delete alpine pod in developer project as test
       tags: test
-      args:
-        executable: /bin/bash
       ansible.builtin.shell: |
-        set -o pipefail
-
         oc new-project developer | true
-        oc run hazelcast --image=hazelcast/hazelcast
-        oc wait --for=condition=Ready --timeout 15m pod/hazelcast
-        oc delete pod/hazelcast
+        oc run alpine --command sleep 300 --image alpine:3.18.3
+        oc wait --for=condition=Ready --timeout 15m pod/alpine
+        oc delete pod/alpine --force
 
     - name: Print CRC webconsole info
       ansible.builtin.debug:

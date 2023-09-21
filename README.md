@@ -13,7 +13,8 @@ To install CRC with this repo, you need to:
     - Debian 10 or later
 
 The cluster monitoring is disabled by default, because it increases the cpu and memory consumption by ~50%.
-To enable it, set `crc.cluster_monitoring: true` in [vars.yaml](vars.yaml).
+To enable it, set `crc_cluster_monitoring: true` in [vars.yaml](vars.yaml) or provide it when calling the playbook with
+`-e crc_cluster_monitoring=true`.
 
 ## Install
 When you've created a redhat account and downloaded the pullsecret file, run:
